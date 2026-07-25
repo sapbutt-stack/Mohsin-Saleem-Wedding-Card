@@ -1,0 +1,643 @@
+```html
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوتِ نامہ | محسن سلیم اور وجیہہ کرامت</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#FDF8E1',
+                            300: '#F3E5AB',
+                            400: '#D4AF37',
+                            500: '#AA771C',
+                            600: '#8B6508',
+                        },
+                        maroon: {
+                            800: '#4A0E17',
+                            900: '#2C060B',
+                        },
+                        emeraldTheme: {
+                            900: '#062612',
+                            950: '#031409'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        cinzel: ['Cinzel', 'serif'],
+                        script: ['Alex Brush', 'cursive'],
+                        urdu: ['Noto Nastaliq Urdu', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050b07;
+            color: #f3e5ab;
+            overflow-x: hidden;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF1BF 0%, #D4AF37 50%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(12, 26, 17, 0.92);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .petal-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(212, 175, 55, 0.85); }
+        }
+
+        .glow-button {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        .tab-active {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA771C 100%);
+            color: #2C060B !important;
+            font-weight: bold;
+            box-shadow: 0 4px 18px rgba(212, 175, 55, 0.45);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center relative px-3 py-4 md:py-10">
+
+    <!-- گلاب کی پتیوں اور چمکدار ذرات کا کینوس -->
+    <canvas id="petalCanvas" class="petal-canvas"></canvas>
+
+    <!-- اینولپ کور (Interactive Invitation Opening Cover) -->
+    <div id="envelopeCover" class="fixed inset-0 z-50 flex items-center justify-center bg-[#030705] bg-opacity-98 p-4 transition-all duration-700">
+        <div class="text-center max-w-md w-full glass-card p-8 rounded-3xl border-2 border-gold-400/60 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-28 h-28 border-r-2 border-b-2 border-gold-400 rounded-full opacity-30"></div>
+            <div class="absolute -bottom-10 -right-10 w-28 h-28 border-l-2 border-t-2 border-gold-400 rounded-full opacity-30"></div>
+            
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full border-2 border-gold-400 flex items-center justify-center bg-gold-400/10 shadow-lg">
+                <i class="fa-solid font-cinzel text-2xl gold-gradient-text">MS</i>
+            </div>
+
+            <p class="font-urdu text-sm text-gold-300 mb-2">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+            <h1 class="font-cinzel text-lg text-gold-100 tracking-widest uppercase mb-1">Wedding Celebrations</h1>
+            <h2 class="font-script text-4xl gold-gradient-text my-2">Mohsin & Wajeeha</h2>
+            <p class="text-xs uppercase tracking-widest text-emerald-200/90 mb-6">6th - 8th August 2026</p>
+
+            <button onclick="openInvitation()" class="glow-button w-full py-3.5 bg-gradient-to-r from-gold-600 via-gold-400 to-gold-600 text-maroon-900 font-bold uppercase tracking-wider rounded-xl shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                <i class="fa-envelope-open text-lg"></i>
+                <span>دعوت نامہ کھولیں / Open Invitation</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- مرکزی شادی کارڈ (Main Multi-Event Invitation Card) -->
+    <main id="mainCard" class="max-w-4xl w-full glass-card rounded-3xl p-5 md:p-10 my-auto relative z-10 border-2 border-gold-400/40 shadow-2xl my-4">
+
+        <!-- کارڈ کی روایتی شاہی بارڈر -->
+        <div class="border-2 border-gold-400/30 p-3 md:p-8 rounded-2xl relative">
+            
+            <!-- کونا آرٹ Decorative Corners -->
+            <div class="absolute top-2 left-2 text-gold-400 opacity-60">
+                <svg width="28" height="28" viewBox="0 0 100 100" fill="currentColor"><path d="M0 0 v50 h10 v-40 h40 v-10 z"/></svg>
+            </div>
+            <div class="absolute top-2 right-2 text-gold-400 opacity-60">
+                <svg width="28" height="28" viewBox="0 0 100 100" fill="currentColor"><path d="M100 0 v50 h-10 v-40 h-40 v-10 z"/></svg>
+            </div>
+            <div class="absolute bottom-2 left-2 text-gold-400 opacity-60">
+                <svg width="28" height="28" viewBox="0 0 100 100" fill="currentColor"><path d="M0 100 v-50 h10 v40 h40 v10 z"/></svg>
+            </div>
+            <div class="absolute bottom-2 right-2 text-gold-400 opacity-60">
+                <svg width="28" height="28" viewBox="0 0 100 100" fill="currentColor"><path d="M100 100 v-50 h-10 v40 h40 v10 z"/></svg>
+            </div>
+
+            <!-- بسم اللہ ہیڈر -->
+            <div class="text-center mb-6">
+                <p class="font-urdu text-2xl md:text-3xl text-gold-300 leading-relaxed mb-1">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </p>
+                <p class="text-[11px] md:text-xs font-cinzel text-gold-300/80 tracking-widest uppercase">
+                    In the name of ALLAH, the Most Beneficent, the Most Merciful
+                </p>
+            </div>
+
+            <!-- ہوسٹ کا نام Host Announcement -->
+            <div class="text-center my-4">
+                <h3 class="font-serif text-2xl md:text-3xl text-white font-semibold tracking-wide mb-1">
+                    Mr & Mrs Thekedar Muhammad Saleem
+                </h3>
+                <p class="text-sm md:text-base font-serif text-gold-200/90 italic max-w-xl mx-auto">
+                    Requests the pleasure of your company at the auspicious wedding ceremonies of their beloved son
+                </p>
+            </div>
+
+            <!-- دلہا اور دلہن Groom & Bride Title -->
+            <div class="text-center my-6 bg-black/30 py-6 px-4 rounded-2xl border border-gold-400/25 relative overflow-hidden">
+                <h1 class="font-script text-5xl md:text-7xl gold-gradient-text tracking-wide drop-shadow-md">
+                    Mohsin Saleem
+                </h1>
+
+                <div class="flex items-center justify-center gap-4 my-2">
+                    <div class="h-[1px] bg-gradient-to-r from-transparent via-gold-400 to-transparent w-20 md:w-32"></div>
+                    <span class="font-cinzel text-xs md:text-sm uppercase text-gold-300 tracking-widest px-2">WITH</span>
+                    <div class="h-[1px] bg-gradient-to-r from-transparent via-gold-400 to-transparent w-20 md:w-32"></div>
+                </div>
+
+                <h2 class="font-script text-5xl md:text-7xl gold-gradient-text tracking-wide drop-shadow-md">
+                    Wajeeha Karamat
+                </h2>
+
+                <p class="mt-2 font-serif text-sm md:text-base text-gold-200/90">
+                    D/o <span class="font-semibold text-white">Mr & Mrs Raja Karamat Hussain</span>
+                </p>
+            </div>
+
+            <!-- تینوں ایونٹس کے انفرادی کاؤنٹ ڈاؤن سیکشن (Individual Event Countdowns) -->
+            <div class="my-8 bg-black/30 p-4 md:p-6 rounded-2xl border border-gold-400/25">
+                <div class="text-center mb-4">
+                    <h5 class="font-cinzel text-sm uppercase tracking-widest text-gold-300 font-bold">
+                        <i class="fa-solid fa-hourglass-start text-gold-400 mr-1.5 animate-pulse"></i>
+                        EVENT COUNTDOWNS / ہر تقریب کا کاؤنٹ ڈاؤن
+                    </h5>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- 1. مہندی کاؤنٹ ڈاؤن -->
+                    <div class="bg-emerald-950/60 border border-amber-500/40 rounded-xl p-3 text-center">
+                        <span class="text-amber-400 font-bold text-xs uppercase font-cinzel block mb-1">
+                            <i class="fa-solid fa-hands-sparkles mr-1"></i> Mehndi (6th Aug)
+                        </span>
+                        <div class="grid grid-cols-4 gap-1 mt-2" id="cd-box-mehndi">
+                            <div class="bg-black/60 p-1.5 rounded border border-amber-500/20">
+                                <span id="cd-mehndi-days" class="block font-cinzel text-base font-bold text-amber-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Days</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-amber-500/20">
+                                <span id="cd-mehndi-hours" class="block font-cinzel text-base font-bold text-amber-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Hrs</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-amber-500/20">
+                                <span id="cd-mehndi-mins" class="block font-cinzel text-base font-bold text-amber-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Mins</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-amber-500/20">
+                                <span id="cd-mehndi-secs" class="block font-cinzel text-base font-bold text-amber-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. بارات کاؤنٹ ڈاؤن -->
+                    <div class="bg-maroon-900/50 border border-rose-500/40 rounded-xl p-3 text-center">
+                        <span class="text-rose-400 font-bold text-xs uppercase font-cinzel block mb-1">
+                            <i class="fa-solid fa-crown mr-1"></i> Baraat (7th Aug)
+                        </span>
+                        <div class="grid grid-cols-4 gap-1 mt-2" id="cd-box-baraat">
+                            <div class="bg-black/60 p-1.5 rounded border border-rose-500/20">
+                                <span id="cd-baraat-days" class="block font-cinzel text-base font-bold text-rose-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Days</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-rose-500/20">
+                                <span id="cd-baraat-hours" class="block font-cinzel text-base font-bold text-rose-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Hrs</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-rose-500/20">
+                                <span id="cd-baraat-mins" class="block font-cinzel text-base font-bold text-rose-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Mins</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-rose-500/20">
+                                <span id="cd-baraat-secs" class="block font-cinzel text-base font-bold text-rose-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. ولیمہ کاؤنٹ ڈاؤن -->
+                    <div class="bg-emerald-950/60 border border-gold-400/40 rounded-xl p-3 text-center">
+                        <span class="text-gold-400 font-bold text-xs uppercase font-cinzel block mb-1">
+                            <i class="fa-solid fa-ring mr-1"></i> Walima (8th Aug)
+                        </span>
+                        <div class="grid grid-cols-4 gap-1 mt-2" id="cd-box-walima">
+                            <div class="bg-black/60 p-1.5 rounded border border-gold-400/20">
+                                <span id="cd-walima-days" class="block font-cinzel text-base font-bold text-gold-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Days</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-gold-400/20">
+                                <span id="cd-walima-hours" class="block font-cinzel text-base font-bold text-gold-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Hrs</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-gold-400/20">
+                                <span id="cd-walima-mins" class="block font-cinzel text-base font-bold text-gold-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Mins</span>
+                            </div>
+                            <div class="bg-black/60 p-1.5 rounded border border-gold-400/20">
+                                <span id="cd-walima-secs" class="block font-cinzel text-base font-bold text-gold-300">00</span>
+                                <span class="text-[8px] uppercase text-gold-300">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تقریبات کے نیویگیشن ٹیبز (Functions Navigation Tabs) -->
+            <div class="my-6">
+                <div class="text-center mb-3">
+                    <span class="font-cinzel text-xs uppercase tracking-widest text-gold-300 font-bold border-b border-gold-400/40 pb-1">
+                        PROGRAMME & CEREMONIES / پروگرام
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-2 p-1.5 bg-black/40 rounded-2xl border border-gold-400/30">
+                    <button onclick="switchTab('all')" id="tab-all" class="tab-btn tab-active px-4 py-2 rounded-xl text-xs md:text-sm font-sans transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>تمام تقریبات (All Events)</span>
+                    </button>
+                    <button onclick="switchTab('mehndi')" id="tab-mehndi" class="tab-btn px-4 py-2 rounded-xl text-xs md:text-sm text-gold-200 font-sans hover:bg-gold-400/20 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-hands-sparkles text-amber-400"></i>
+                        <span>مہندی (Mehndi)</span>
+                    </button>
+                    <button onclick="switchTab('baraat')" id="tab-baraat" class="tab-btn px-4 py-2 rounded-xl text-xs md:text-sm text-gold-200 font-sans hover:bg-gold-400/20 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-crown text-rose-400"></i>
+                        <span>بارات (Baraat)</span>
+                    </button>
+                    <button onclick="switchTab('walima')" id="tab-walima" class="tab-btn px-4 py-2 rounded-xl text-xs md:text-sm text-gold-200 font-sans hover:bg-gold-400/20 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-ring text-emerald-400"></i>
+                        <span>ولیمہ (Walima)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ایونٹس کے کارڈز (Events Details Section) -->
+            <div id="eventsContainer" class="space-y-6 my-6">
+
+                <!-- 1. رسمِ حنا / مہندی (Mehndi Card) -->
+                <div id="card-mehndi" class="event-card bg-emerald-950/30 border border-amber-500/30 rounded-2xl p-5 md:p-6 transition-all hover:border-amber-400/60 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/20 pb-4">
+                        <div>
+                            <span class="inline-block bg-amber-500/20 text-amber-300 text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full mb-1">
+                                DAY 1 • 6th August 2026
+                            </span>
+                            <h4 class="font-cinzel text-2xl text-amber-300 font-bold">MEHNDI CEREMONY / راسمِ حنا</h4>
+                            <p class="font-serif italic text-gold-200 text-sm">Please join us to celebrate Mehndi of Mohsin Saleem</p>
+                        </div>
+                        <div class="text-left md:text-right">
+                            <span class="text-white text-base font-semibold block">
+                                <i class="fa-regular fa-calendar-days text-amber-400 mr-1.5"></i>Thursday, 6th August 2026
+                            </span>
+                            <span class="text-amber-200 text-xs bg-amber-950/60 px-2.5 py-1 rounded-md inline-block mt-1">
+                                <i class="fa-regular fa-clock mr-1"></i> 6:00 PM to 10:00 PM
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                        <div class="text-sm">
+                            <span class="text-gold-400 font-bold block text-xs uppercase font-cinzel">VENUE / مقام</span>
+                            <span class="text-white font-medium text-lg">Jabeer Marquee</span>
+                            <span class="text-gold-200/80 block text-xs">Chitterpari, Mirpur A.K</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                            <a href="https://maps.google.com/?q=Jabeer+Marquee+Chitterpari+Mirpur+A.K" target="_blank" class="flex-1 md:flex-none px-3.5 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 rounded-xl text-amber-200 text-xs font-sans flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-solid fa-location-dot"></i> Location
+                            </a>
+                            <button onclick="addEventToCal('Mehndi Ceremony', '20260806T130000Z', '20260806T170000Z', 'Jabeer Marquee Chitterpari Mirpur A.K')" class="flex-1 md:flex-none px-3.5 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 rounded-xl text-amber-200 text-xs font-sans flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-regular fa-calendar-plus"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. بارات (Baraat Card) -->
+                <div id="card-baraat" class="event-card bg-maroon-900/30 border border-rose-500/30 rounded-2xl p-5 md:p-6 transition-all hover:border-rose-400/60 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-rose-500/20 pb-4">
+                        <div>
+                            <span class="inline-block bg-rose-500/20 text-rose-300 text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full mb-1">
+                                DAY 2 • 7th August 2026
+                            </span>
+                            <h4 class="font-cinzel text-2xl text-rose-300 font-bold">BARAAT CEREMONY / بارات</h4>
+                            <p class="font-serif italic text-gold-200 text-sm">Please join us to attend Baraat Ceremony of Mohsin Saleem</p>
+                        </div>
+                        <div class="text-left md:text-right">
+                            <span class="text-white text-base font-semibold block">
+                                <i class="fa-regular fa-calendar-days text-rose-400 mr-1.5"></i>Friday, 7th August 2026
+                            </span>
+                            <div class="flex flex-wrap gap-1 mt-1 justify-start md:justify-end">
+                                <span class="text-rose-200 text-[11px] bg-maroon-950 px-2 py-0.5 rounded border border-rose-500/20">
+                                    سہرا بندی: 9:00 AM
+                                </span>
+                                <span class="text-rose-200 text-[11px] bg-maroon-950 px-2 py-0.5 rounded border border-rose-500/20">
+                                    روانگی بارات: 11:00 AM
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                        <div class="text-sm">
+                            <span class="text-gold-400 font-bold block text-xs uppercase font-cinzel">DEPARTURE FROM / روانگی بمقام</span>
+                            <span class="text-white font-medium text-lg">House # 151/A, Sector D/3 East</span>
+                            <span class="text-gold-200/80 block text-xs">Mirpur A.K</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                            <a href="https://maps.google.com/?q=Sector+D/3+East+Mirpur+AK" target="_blank" class="flex-1 md:flex-none px-3.5 py-2 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/50 rounded-xl text-rose-200 text-xs font-sans flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-solid fa-location-dot"></i> Location
+                            </a>
+                            <button onclick="addEventToCal('Baraat Ceremony - Mohsin Saleem', '20260807T040000Z', '20260807T100000Z', 'House 151/A Sector D/3 East Mirpur AK')" class="flex-1 md:flex-none px-3.5 py-2 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/50 rounded-xl text-rose-200 text-xs font-sans flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-regular fa-calendar-plus"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. ولیمہ (Walima Card) -->
+                <div id="card-walima" class="event-card bg-emerald-950/50 border border-gold-400/40 rounded-2xl p-5 md:p-6 transition-all hover:border-gold-400/70 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gold-400/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gold-400/20 pb-4">
+                        <div>
+                            <span class="inline-block bg-gold-400/20 text-gold-300 text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full mb-1">
+                                DAY 3 • 8th August 2026
+                            </span>
+                            <h4 class="font-cinzel text-2xl text-gold-300 font-bold">WALIMA CEREMONY / ولیمہ</h4>
+                            <p class="font-serif italic text-gold-200 text-sm">Auspicious wedding reception of Mohsin Saleem & Wajeeha Karamat</p>
+                        </div>
+                        <div class="text-left md:text-right">
+                            <span class="text-white text-base font-semibold block">
+                                <i class="fa-regular fa-calendar-days text-gold-400 mr-1.5"></i>Saturday, 8th August 2026
+                            </span>
+                            <span class="text-gold-200 text-xs bg-emerald-900/80 px-2.5 py-1 rounded-md inline-block mt-1 border border-gold-400/20">
+                                <i class="fa-regular fa-clock mr-1"></i> 7:00 PM to 10:00 PM
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                        <div class="text-sm">
+                            <span class="text-gold-400 font-bold block text-xs uppercase font-cinzel">VENUE / مقام</span>
+                            <span class="text-white font-medium text-lg">Jabeer Marquee</span>
+                            <span class="text-gold-200/80 block text-xs">Chitterpari, Mirpur A.K</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                            <a href="https://maps.google.com/?q=Jabeer+Marquee+Chitterpari+Mirpur+A.K" target="_blank" class="flex-1 md:flex-none px-3.5 py-2 bg-gold-400/20 hover:bg-gold-400/30 border border-gold-400/50 rounded-xl text-gold-200 text-xs font-sans flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-solid fa-location-dot"></i> Location
+                            </a>
+                            <button onclick="addEventToCal('Walima Ceremony - Mohsin & Wajeeha', '20260808T140000Z', '20260808T170000Z', 'Jabeer Marquee Chitterpari Mirpur A.K')" class="flex-1 md:flex-none px-3.5 py-2 bg-gold-400/20 hover:bg-gold-400/30 border border-gold-400/50 rounded-xl text-gold-200 text-xs font-sans flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-regular fa-calendar-plus"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- رابطہ اور RSVP Contacts -->
+            <div class="mt-8 pt-6 border-t border-gold-400/30 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <!-- R.S.V.P -->
+                <div class="text-center md:text-left bg-black/30 p-4 rounded-xl border border-gold-400/20">
+                    <h6 class="font-cinzel text-xs font-bold text-gold-400 uppercase tracking-widest mb-2">
+                        R.S.V.P / رابطہ برائے معلومات
+                    </h6>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center justify-center md:justify-start gap-3">
+                            <span class="text-white font-semibold">Waheed Saleem:</span>
+                            <a href="tel:03445391183" class="text-gold-300 hover:underline">0344-5391183</a>
+                            <a href="https://wa.me/923445391183" target="_blank" class="text-emerald-400 hover:scale-110 transition-transform" title="WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                            </a>
+                        </div>
+                        <div class="flex items-center justify-center md:justify-start gap-3">
+                            <span class="text-white font-semibold">Naveed Saleem:</span>
+                            <a href="tel:03445925544" class="text-gold-300 hover:underline">0344-5925544</a>
+                            <a href="https://wa.me/923445925544" target="_blank" class="text-emerald-400 hover:scale-110 transition-transform" title="WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPLIMENTS FROM -->
+                <div class="text-center md:text-right bg-black/30 p-4 rounded-xl border border-gold-400/20">
+                    <h6 class="font-cinzel text-xs font-bold text-gold-400 uppercase tracking-widest mb-1">COMPLIMENTS FROM</h6>
+                    <p class="font-serif text-lg text-white font-medium">All Family Members & Friends</p>
+                    <p class="font-urdu text-sm text-gold-300/90 mt-1">جملہ اعزا و اقارب و دوست احباب</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- شیئرنگ بٹن Share Button -->
+        <div class="mt-6 flex justify-center">
+            <button onclick="shareCard()" class="px-8 py-3 bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-maroon-900 font-bold rounded-xl shadow-xl hover:brightness-110 flex items-center gap-2 text-sm transition-all transform hover:-translate-y-0.5">
+                <i class="fa-solid fa-share-nodes text-base"></i>
+                <span>مکمل دعوت نامہ شیئر کریں (Share Complete Invitation)</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- فوٹر Footer -->
+    <footer class="mt-4 text-center text-xs text-gold-400/60 font-sans z-10">
+        <p>Wishing a Lifetime of Happiness to Mohsin Saleem & Wajeeha Karamat ❤️</p>
+    </footer>
+
+    <!-- جاوا اسکرپٹ (JavaScript Logic) -->
+    <script>
+        // اینولپ کھولنے کا فنکشن
+        function openInvitation() {
+            const cover = document.getElementById('envelopeCover');
+            cover.style.opacity = '0';
+            cover.style.transform = 'scale(0.92)';
+            setTimeout(() => {
+                cover.style.display = 'none';
+            }, 700);
+
+            startPetalAnimation();
+        }
+
+        // فنکشنز کے لیے ٹیب سوئچنگ
+        function switchTab(tab) {
+            const tabs = ['all', 'mehndi', 'baraat', 'walima'];
+            
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('text-gold-200', 'hover:bg-gold-400/20');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('text-gold-200', 'hover:bg-gold-400/20');
+                }
+            });
+
+            const cards = ['card-mehndi', 'card-baraat', 'card-walima'];
+            cards.forEach(c => {
+                const el = document.getElementById(c);
+                if (tab === 'all') {
+                    el.style.display = 'block';
+                } else {
+                    if (c === `card-${tab}`) {
+                        el.style.display = 'block';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // تینوں ایونٹس کی تاریخیں اور اوقات
+        const eventDates = {
+            mehndi: new Date("August 6, 2026 18:00:00").getTime(),
+            baraat: new Date("August 7, 2026 09:00:00").getTime(),
+            walima: new Date("August 8, 2026 19:00:00").getTime()
+        };
+
+        // تینوں ایونٹس کے لیے لائیو کاؤنٹ ڈاؤن ٹائمر
+        function updateAllCountdowns() {
+            const now = new Date().getTime();
+
+            ['mehndi', 'baraat', 'walima'].forEach(evt => {
+                const diff = eventDates[evt] - now;
+                const daysEl = document.getElementById(`cd-${evt}-days`);
+                const hoursEl = document.getElementById(`cd-${evt}-hours`);
+                const minsEl = document.getElementById(`cd-${evt}-mins`);
+                const secsEl = document.getElementById(`cd-${evt}-secs`);
+                const boxEl = document.getElementById(`cd-box-${evt}`);
+
+                if (diff > 0) {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    if (daysEl) daysEl.innerText = days < 10 ? "0" + days : days;
+                    if (hoursEl) hoursEl.innerText = hours < 10 ? "0" + hours : hours;
+                    if (minsEl) minsEl.innerText = minutes < 10 ? "0" + minutes : minutes;
+                    if (secsEl) secsEl.innerText = seconds < 10 ? "0" + seconds : seconds;
+                } else {
+                    if (boxEl) boxEl.innerHTML = "<div class='col-span-4 text-gold-300 font-serif text-xs py-1'>Celebration Live / جاری ہے 🎉</div>";
+                }
+            });
+        }
+
+        setInterval(updateAllCountdowns, 1000);
+        updateAllCountdowns();
+
+        // گوگل کیلنڈر میں مخصوص ایونٹ شامل کریں
+        function addEventToCal(titleStr, startTime, endTime, locationStr) {
+            const title = encodeURIComponent(titleStr);
+            const details = encodeURIComponent("Wedding Celebrations of Mohsin Saleem S/o Mr & Mrs Thekedar Muhammad Saleem.");
+            const location = encodeURIComponent(locationStr);
+
+            const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startTime}/${endTime}&details=${details}&location=${location}`;
+            window.open(calendarUrl, '_blank');
+        }
+
+        // کارڈ شیئر کرنے کا فنکشن
+        function shareCard() {
+            const shareData = {
+                title: 'دعوت نامہ - محسن سلیم اور وجیہہ کرامت کی شادی کی تقریبات',
+                text: 'آپ کو محسن سلیم کی شادی کی تمام تقریبات (مہندی، بارات، ولیمہ) میں شمولیت کی پرخلوص دعوت دی جاتی ہے۔\n• مہندی: 6 اگست 2026\n• بارات: 7 اگست 2026\n• ولیمہ: 8 اگست 2026',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch((err) => console.log('Sharing error', err));
+            } else {
+                const dummy = document.createElement('input');
+                document.body.appendChild(dummy);
+                dummy.value = shareData.text + "\n" + window.location.href;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                alert("دعوت نامہ کی تفصیلات کلپ بورڈ پر کاپی ہو گئی ہیں!");
+            }
+        }
+
+        // چمکدار پتیوں کی کینوس اینیمیشن
+        function startPetalAnimation() {
+            const canvas = document.getElementById('petalCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const particles = [];
+            const particleCount = 45;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 7 + 3,
+                    speedY: Math.random() * 1.2 + 0.6,
+                    speedX: Math.random() * 1 - 0.5,
+                    opacity: Math.random() * 0.7 + 0.3,
+                    color: Math.random() > 0.4 ? '#D4AF37' : '#E63946'
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.opacity;
+                    ctx.fill();
+
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+
+                    if (p.y > canvas.height) {
+                        p.y = -10;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+    </script>
+</body>
+</html>
+
+```
